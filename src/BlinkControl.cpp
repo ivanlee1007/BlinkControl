@@ -30,6 +30,7 @@
 BlinkControl::BlinkControl(int pin) {
   this->_pin = pin;
   pinMode(this->_pin, OUTPUT);
+  this->_pwmChannel = 0;
 }
 
 BlinkControl::BlinkControl(Shifty *sh, unsigned int shiftRegPin, unsigned int bitCount) {
