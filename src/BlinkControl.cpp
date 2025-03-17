@@ -113,7 +113,11 @@ void BlinkControl::_breatheLoop() {
       this->_brightStep = -this->_brightStep;
     }
     #if defined(ESP32)
+    #if ESP_IDF_VERSION_MAJOR >= 4
+    ledcWriteChannel(this->_pwmChannel, this->_dutyCycle);
+    #else
     ledcWrite(this->_pwmChannel, this->_dutyCycle);
+    #endif
     #else
     analogWrite(this->_pin, this->_dutyCycle);
     #endif
@@ -130,7 +134,11 @@ void BlinkControl::_pulseLoop() {
       this->_lastAction += 500;
     }
     #if defined(ESP32)
+    #if ESP_IDF_VERSION_MAJOR >= 4
+    ledcWriteChannel(this->_pwmChannel, this->_dutyCycle);
+    #else
     ledcWrite(this->_pwmChannel, this->_dutyCycle);
+    #endif
     #else
     analogWrite(this->_pin, this->_dutyCycle);
     #endif
@@ -144,7 +152,11 @@ void BlinkControl::_fadeInLoop() {
     this->_lastAction = curtime;
     this->_dutyCycle += this->_brightStep;
     #if defined(ESP32)
+    #if ESP_IDF_VERSION_MAJOR >= 4
+    ledcWriteChannel(this->_pwmChannel, this->_dutyCycle);
+    #else
     ledcWrite(this->_pwmChannel, this->_dutyCycle);
+    #endif
     #else
     analogWrite(this->_pin, this->_dutyCycle);
     #endif
@@ -161,7 +173,11 @@ void BlinkControl::_fadeOutLoop() {
     this->_lastAction = curtime;
     this->_dutyCycle -= this->_brightStep;
     #if defined(ESP32)
+    #if ESP_IDF_VERSION_MAJOR >= 4
+    ledcWriteChannel(this->_pwmChannel, this->_dutyCycle);
+    #else
     ledcWrite(this->_pwmChannel, this->_dutyCycle);
+    #endif
     #else
     analogWrite(this->_pin, this->_dutyCycle);
     #endif

@@ -83,7 +83,11 @@ class BlinkControl {
     
     #if defined(ESP32)
     uint8_t _pwmChannel        = BC_PWM_CHANNEL_UNASSIGNED;
+    #if defined(CONFIG_IDF_TARGET_ESP32C6)
+    double  _pwmFreq           = 40;
+    #else
     double  _pwmFreq           = 50;
+    #endif
     uint8_t _pwmResolutionBits = 8;
     bool    _pwmPinAttached    = false;
     #endif
