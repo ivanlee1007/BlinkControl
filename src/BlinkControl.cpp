@@ -28,6 +28,7 @@
 #include "BlinkControl.h"
 
 BlinkControl::BlinkControl(int pin) {
+  this->_shiftReg = NULL;
   this->_pin = pin;
   pinMode(this->_pin, OUTPUT);
   this->_pwmChannel = 0;
@@ -42,6 +43,7 @@ BlinkControl::BlinkControl(Shifty *sh, unsigned int shiftRegPin, unsigned int bi
 // only for ESP32 ledc library
 #if defined(ESP32)
 BlinkControl::BlinkControl(int pin, uint8_t channel, double freq, uint8_t resolutionBits) {
+  this->_shiftReg = NULL;
   this->_pin = pin;
   this->_pwmChannel = channel;
   this->_pwmFreq = freq;
@@ -61,7 +63,6 @@ BlinkControl::~BlinkControl() {
 }
 
 void BlinkControl::begin() {
-  this->_shiftReg = NULL;
   #if defined(ESP32)
   this->_pwmPinAttached = false;
   #endif
