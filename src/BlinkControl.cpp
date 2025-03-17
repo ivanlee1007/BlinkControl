@@ -49,7 +49,7 @@ BlinkControl::BlinkControl(int pin, uint8_t channel, double freq, uint8_t resolu
   this->_brightnessMax = pow(2, this->_pwmResolutionBits) - 1;
   pinMode(this->_pin, OUTPUT);
   #if ESP_IDF_VERSION_MAJOR >= 4
-  ledcAttachChannel(this->_pin, this->_pwmFreq, this->_pwmResolutionBits, this->_pwmChannel);
+  //ledcAttachChannel(this->_pin, this->_pwmFreq, this->_pwmResolutionBits, this->_pwmChannel);
   #else
   ledcSetup(this->_pwmChannel, this->_pwmFreq, this->_pwmResolutionBits);
   #endif
@@ -61,14 +61,15 @@ BlinkControl::~BlinkControl() {
 }
 
 void BlinkControl::begin() {
+  this->_shiftReg = NULL;
+  #if defined(ESP32)
+  this->_pwmPinAttached = false;
+  #endif
   this->_offOne();
   this->_timingCursor = 0;
   this->_pinOn = false;
   this->_state = BC_STATE_OFF;
   this->_lastAction = 0;
-  #if defined(ESP32)
-  this->_pwmPinAttached = false;
-  #endif
 }
 
 void BlinkControl::loop() {
@@ -416,6 +417,7 @@ void BlinkControl::_pwmDetachPin() {
     ledcDetachPin(this->_pin);
     #endif
     this->_pwmPinAttached = false;
+    pinMode(this->_pin, OUTPUT);
   }
 }
 #endif
