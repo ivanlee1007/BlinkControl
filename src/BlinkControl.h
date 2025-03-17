@@ -41,12 +41,19 @@
 #define BC_PIN_UNASSIGNED          -1
 #define BC_PWM_CHANNEL_UNASSIGNED  99
 
+#if defined(CONFIG_IDF_TARGET_ESP32C6)
+#define BC_PWM_DEFAULT_FREQ  40
+#else
+#define BC_PWM_DEFAULT_FREQ  50
+#endif
+
+
 class BlinkControl {
   public:
     BlinkControl(int pin);
     BlinkControl(Shifty* sh, unsigned int shiftRegPin, unsigned int bitCount=8);
     #if defined(ESP32)
-    BlinkControl(int pin, uint8_t channel, double freq=50, uint8_t resolutionBits=8);
+    BlinkControl(int pin, uint8_t channel, double freq = BC_PWM_DEFAULT_FREQ, uint8_t resolutionBits=8);
     #endif
     ~BlinkControl();
 
@@ -83,11 +90,7 @@ class BlinkControl {
     
     #if defined(ESP32)
     uint8_t _pwmChannel        = BC_PWM_CHANNEL_UNASSIGNED;
-    #if defined(CONFIG_IDF_TARGET_ESP32C6)
-    double  _pwmFreq           = 40;
-    #else
-    double  _pwmFreq           = 50;
-    #endif
+    double  _pwmFreq           = BC_PWM_DEFAULT_FREQ;
     uint8_t _pwmResolutionBits = 8;
     bool    _pwmPinAttached    = false;
     #endif
