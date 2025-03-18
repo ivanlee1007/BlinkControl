@@ -50,7 +50,7 @@ BlinkControl::BlinkControl(int pin, uint8_t channel, double freq, uint8_t resolu
   this->_pwmResolutionBits = resolutionBits;
   this->_brightnessMax = pow(2, this->_pwmResolutionBits) - 1;
   pinMode(this->_pin, OUTPUT);
-  #if ESP_IDF_VERSION_MAJOR >= 4
+  #if ESP_IDF_VERSION_MAJOR >= 5
   //ledcAttachChannel(this->_pin, this->_pwmFreq, this->_pwmResolutionBits, this->_pwmChannel);
   #else
   ledcSetup(this->_pwmChannel, this->_pwmFreq, this->_pwmResolutionBits);
@@ -117,7 +117,7 @@ void BlinkControl::_breatheLoop() {
       this->_brightStep = -this->_brightStep;
     }
     #if defined(ESP32)
-    #if ESP_IDF_VERSION_MAJOR >= 4
+    #if ESP_IDF_VERSION_MAJOR >= 5
     ledcWriteChannel(this->_pwmChannel, this->_dutyCycle);
     #else
     ledcWrite(this->_pwmChannel, this->_dutyCycle);
@@ -138,7 +138,7 @@ void BlinkControl::_pulseLoop() {
       this->_lastAction += 500;
     }
     #if defined(ESP32)
-    #if ESP_IDF_VERSION_MAJOR >= 4
+    #if ESP_IDF_VERSION_MAJOR >= 5
     ledcWriteChannel(this->_pwmChannel, this->_dutyCycle);
     #else
     ledcWrite(this->_pwmChannel, this->_dutyCycle);
@@ -156,7 +156,7 @@ void BlinkControl::_fadeInLoop() {
     this->_lastAction = curtime;
     this->_dutyCycle += this->_brightStep;
     #if defined(ESP32)
-    #if ESP_IDF_VERSION_MAJOR >= 4
+    #if ESP_IDF_VERSION_MAJOR >= 5
     ledcWriteChannel(this->_pwmChannel, this->_dutyCycle);
     #else
     ledcWrite(this->_pwmChannel, this->_dutyCycle);
@@ -177,7 +177,7 @@ void BlinkControl::_fadeOutLoop() {
     this->_lastAction = curtime;
     this->_dutyCycle -= this->_brightStep;
     #if defined(ESP32)
-    #if ESP_IDF_VERSION_MAJOR >= 4
+    #if ESP_IDF_VERSION_MAJOR >= 5
     ledcWriteChannel(this->_pwmChannel, this->_dutyCycle);
     #else
     ledcWrite(this->_pwmChannel, this->_dutyCycle);
@@ -401,7 +401,7 @@ void BlinkControl::_shiftRegOnePinOnOnly(int pinNum, bool value) {
 #if defined(ESP32)
 void BlinkControl::_pwmAttachPin() {
   if (!this->_pwmPinAttached) {
-    #if ESP_IDF_VERSION_MAJOR >= 4
+    #if ESP_IDF_VERSION_MAJOR >= 5
     ledcAttachChannel(this->_pin,  this->_pwmFreq, this->_pwmResolutionBits, this->_pwmChannel);
     #else
     ledcAttachPin(this->_pin, this->_pwmChannel);
@@ -412,7 +412,7 @@ void BlinkControl::_pwmAttachPin() {
 
 void BlinkControl::_pwmDetachPin() {
   if (this->_pwmPinAttached) {
-    #if ESP_IDF_VERSION_MAJOR >= 4
+    #if ESP_IDF_VERSION_MAJOR >= 5
     ledcDetach(this->_pin);
     #else
     ledcDetachPin(this->_pin);
